@@ -1,7 +1,9 @@
+const express = require("express");
 const router = express.Router();
+const { AuthController } = require("../controllers/auth");
 
-router.get("/", (req, res) => {
-  res.send("Welcome to LMS Backend");
-});
+
+//SECTION - Auth Routes
+router.get("/", AuthController.welcome_msz);
 
 module.exports = router;
