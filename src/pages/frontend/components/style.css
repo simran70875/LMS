@@ -1,0 +1,19 @@
+/* src/Header.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.logo {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.menu-icon {
+  font-size: 1.5em;
+  cursor: pointer;
+}
