@@ -81,7 +81,7 @@ const Login = () => {
                 <FormInput
                   style={{ width: "100%" }}
                   type="text"
-                  placeholder="Login-Id"
+                  placeholder="Username or Email Address"
                 />
               </SearchBar>
               <SearchBar>
