@@ -52,7 +52,7 @@ const BookList = () => {
   return (
     <BookListSection className="row">
       <div className="d-flex align-items-center justify-content-center col-md-1">
-        <Heading>Recent Bestsellers</Heading>
+        <Heading>Recent Added Books</Heading>
       </div>
       <div className="books row col-md-11">
         {books.map((book, index) => (

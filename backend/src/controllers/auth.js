@@ -46,7 +46,6 @@ class AuthController {
     }
   };
 
-
   //REVIEW - ========================== User Login =================================
   static loginUser = async (req, res) => {
     const { username, password } = req.body;
