@@ -10,7 +10,7 @@ class AuthController {
 
  //REVIEW - ========================== User Registration =================================
   static register = async (req, res) => {
-    const { role, username, phone, email, password, confirmPassword } = req.body;
+    const { role, username, phone, email, password, confirmPassword, image, address, course, courseYears } = req.body;
     try {
       //NOTE -  Check if password and confirmPassword match
       if(password != confirmPassword){
@@ -20,7 +20,6 @@ class AuthController {
       //NOTE - Check if user already exists
       await ifUserExists({username:username});
       await ifUserExists({email:email});
-
      
 
       //NOTE - encrypt password
@@ -33,6 +32,10 @@ class AuthController {
         phone,
         email,
         password: encryptedPassword,
+        image,
+        address,
+        course,
+        courseYears
       });
 
       //NOTE - save new data

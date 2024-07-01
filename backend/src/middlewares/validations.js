@@ -35,3 +35,52 @@ exports.validateLoginUser = [
 
   }
 ]
+
+exports.validateNewCategory = [
+  check("cateName").trim().not().isEmpty().withMessage("Category Name is required"),
+  (req,res,next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "Add category failed",
+        errors: errors.array(),
+      });
+    }
+    next();
+  }
+]
+
+exports.validateNewBook = [
+  check("isbn").trim().not().isEmpty().withMessage("ISBN is required fields"),
+  check("title").trim().not().isEmpty().withMessage("title is required fields"),
+  check("authorName").trim().not().isEmpty().withMessage("authorName is required fields"),
+  check("category").trim().not().isEmpty().withMessage("category is required fields"),
+  check("publisher").trim().not().isEmpty().withMessage("publisher is required fields"),
+  check("availableCopies").trim().not().isEmpty().withMessage("availableCopies is required fields"),
+  check("status").trim().not().isEmpty().withMessage("status is required fields"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) { 
+      return res.status(400).json({
+        message: "Add New Book failed",
+        errors: errors.array(),
+      });
+    }
+    next();
+  }
+]
+
+
+exports.validateGetBooks = [
+  check("category").trim().not().isEmpty().withMessage("Category is Required Field!"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(400).json({
+        message: "Get books by category failed",
+        errors: errors.array(),
+      });
+    }
+    next();
+  }
+]

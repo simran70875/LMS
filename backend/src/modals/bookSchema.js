@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 const bookSchema = new mongoose.Schema({
   isbn :{type:String, required: true, unique: true },
   title: { type: String, required: true },
-  description: { type: String, required: true },
+  description: { type: String },
   authorName: { type: String, required: true },
   coverImage : {type: String, required: true },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "categorySchema", required: true},
+  category: { type: String, ref: "categorySchema", required: true},
   publisher : { type: String,},
   publicationYear : { type: String, required: true},
   availableCopies : { type:Number , required: true},

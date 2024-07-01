@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
   phone: { type: Number, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  image: { type: String },
+  address: { type: String },
+  course: { type: String },
+  courseYears: { type: Number },
   createdDate: { type: Date, required: true, default: Date.now },
 });
 
