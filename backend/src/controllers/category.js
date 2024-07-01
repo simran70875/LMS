@@ -1,6 +1,7 @@
 const categorySchema = require("../modals/categorySchema");
 
 class categoryController {
+  //REVIEW - ========================== Add new catgory =================================
   static addCategory = async (req, res) => {
     const { cateName } = req.body;
     try {
@@ -20,6 +21,7 @@ class categoryController {
     }
   };
 
+//REVIEW - ========================== get all catgories =================================
   static getCategories = async(req, res) => {
     try {
         const allCats = await categorySchema.find(); 

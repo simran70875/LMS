@@ -11,7 +11,6 @@ class AuthController {
  //REVIEW - ========================== User Registration =================================
   static register = async (req, res) => {
     const { role, username, phone, email, password, confirmPassword } = req.body;
-    
     try {
       //NOTE -  Check if password and confirmPassword match
       if(password != confirmPassword){

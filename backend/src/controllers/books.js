@@ -39,6 +39,7 @@ class BooksController {
 
   };
 
+  //REVIEW - ========================== get books =================================
   static getAllBooks = async (req, res) => {
     try {
         const allBooks = await bookSchema.find(); 
@@ -48,6 +49,8 @@ class BooksController {
         return res.status(500).send({success: false, error: error.message });
     }
   };
+
+  //REVIEW - ========================== get books category wise =================================
   static getCatBooks = async (req, res) => { 
     const {category} = req.body;
     try {
