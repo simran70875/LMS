@@ -70,4 +70,4 @@ class studentController {
   };
 }
 
-modules.export = { studentController };
+module.exports = { studentController };

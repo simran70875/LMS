@@ -4,6 +4,7 @@ const { AuthController } = require("../controllers/auth");
 const isValid = require("../middlewares/validations");
 const { categoryController } = require("../controllers/category");
 const { BooksController } = require("../controllers/books");
+const { studentController } = require("../controllers/students");
 
 router.get("/", AuthController.welcome_msz);
 
@@ -25,6 +26,7 @@ router.put("/editBook/:id", isValid.validateNewBook, BooksController.editBook);
 router.delete("/deleteBook/:id", BooksController.deleteBook);
 
 //NOTE - Handle students
+router.post("/addStudent", isValid.validateNewStudent, studentController.addStudent);
 
 
 module.exports = router;

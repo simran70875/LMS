@@ -70,7 +70,6 @@ exports.validateNewBook = [
   }
 ]
 
-
 exports.validateGetBooks = [
   check("category").trim().not().isEmpty().withMessage("Category is Required Field!"),
   (req, res, next) => {
@@ -78,6 +77,25 @@ exports.validateGetBooks = [
     if(!errors.isEmpty()) {
       return res.status(400).json({
         message: "Get books by category failed",
+        errors: errors.array(),
+      });
+    }
+    next();
+  }
+]
+
+exports.validateNewStudent = [
+  check("username").trim().not().isEmpty().withMessage("Username is Required field!"),
+  check("phone").trim().not().isEmpty().withMessage("phone is Required field!"),
+  check("email").trim().not().isEmpty().withMessage("email is Required field!"),
+  check("password").trim().not().isEmpty().withMessage("password is Required field!"),
+  check("address").trim().not().isEmpty().withMessage("address is Required field!"),
+  check("course").trim().not().isEmpty().withMessage("course is Required field!"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      return res.status(400).json({
+        message: "add student failed",
         errors: errors.array(),
       });
     }
