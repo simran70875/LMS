@@ -16,7 +16,6 @@ class studentController {
       courseYears,
     } = req.body;
     try {
-      
       //NOTE - Check if user already exists
       await ifUserExists({ username: username });
       await ifUserExists({ email: email });
@@ -35,6 +34,7 @@ class studentController {
         address,
         course,
         courseYears,
+        status: true,
       });
 
       //NOTE - save new data
@@ -44,6 +44,7 @@ class studentController {
         to: email,
         subject: "Welcome to Book.com",
         text: `Dear ${username},\n\nYour library account has been created successfully.\n\nUsername: ${username}\nPassword: ${password}\n\nBest Regards,\nThe Library Team`,
+        html: "<b>Hello world?</b>", // html body
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -65,6 +66,103 @@ class studentController {
       });
     } catch (error) {
       console.error("Error While adding new user ==> ", error);
+      return res.status(500).send({ success: false, error: error.message });
+    }
+  };
+
+  static getAllStudents = async (req, res) => {
+    try {
+      const allStudents = await userSchema.find({role : 'student'});
+      return res.send({ success: true, data: allStudents, message: "" });
+    } catch (error) {
+      console.error("Error While getting allStudents ==> ", error);
+      return res.status(500).send({ success: false, error: error.message });
+    }
+  };
+
+  static editStudent = async (req, res) => {
+    const id = req.params.id;
+    const {
+      username,
+      phone,
+      email,
+      password,
+      image,
+      address,
+      course,
+      courseYears,
+    } = req.body;
+
+    try {
+      const encryptedPassword = await getBcryptedPassword(password);
+      const updateStudent = await userSchema.findByIdAndUpdate(
+        id,
+        {
+          username,
+          phone,
+          email,
+          password: encryptedPassword,
+          image,
+          address,
+          course,
+          courseYears,
+          updatedAt: Date.now(),
+        },
+        { new: true }
+      );
+
+      if (!updateStudent) {
+        return res.send({ success: false, message: "Student Not Found!" });
+      }
+      return res.send({
+        success: true,
+        message: "Student Updated Successfully",
+      });
+    } catch (error) {
+      console.error("Error While editing Student ==> ", error);
+      return res.status(500).send({ success: false, error: error.message });
+    }
+  };
+
+  static deleteStudent = async (req, res) => {
+    const id = req.params.id;
+    try {
+      const dltStudent = await userSchema.findByIdAndDelete(id);
+
+      if (!dltStudent) {
+        return res.send({ success: false, message: "Student Not Found!" });
+      }
+      return res.send({
+        success: true,
+        message: "Student deleted Successfully",
+      });
+    } catch (error) {
+      console.error("Error While deleting Student ==> ", error);
+      return res.status(500).send({ success: false, error: error.message });
+    }
+  };
+
+  static editStudentStatus = async (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+    try {
+      const updateStudentStatus = await userSchema.findByIdAndUpdate(
+        id,
+        {
+          status,
+        },
+        { new: true }
+      );
+
+      if (!updateStudentStatus) {
+        return res.send({ success: false, message: "Student Not Found!" });
+      }
+      return res.send({
+        success: true,
+        message: "Student Status Updated Successfully",
+      });
+    } catch (error) {
+      console.error("Error While editing Student status ==> ", error);
       return res.status(500).send({ success: false, error: error.message });
     }
   };

@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   course: { type: String },
   courseYears: { type: Number },
   createdDate: { type: Date, required: true, default: Date.now },
+  status: { type: Boolean, required: true, default: true },
 });
 
 module.exports = mongoose.model("users", userSchema);

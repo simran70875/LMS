@@ -5,6 +5,7 @@ const isValid = require("../middlewares/validations");
 const { categoryController } = require("../controllers/category");
 const { BooksController } = require("../controllers/books");
 const { studentController } = require("../controllers/students");
+const { issuedBooksController } = require("../controllers/issuedBooks");
 
 router.get("/", AuthController.welcome_msz);
 
@@ -27,6 +28,15 @@ router.delete("/deleteBook/:id", BooksController.deleteBook);
 
 //NOTE - Handle students
 router.post("/addStudent", isValid.validateNewStudent, studentController.addStudent);
+router.get("/getStudents", studentController.getAllStudents);
+router.put("/editStudent/:id", studentController.editStudent);
+router.delete("/deleteStudent/:id", studentController.deleteStudent);
+router.put("/editStudentStatus/:id", studentController.editStudentStatus);
+
+//NOTE - Handle issued books
+router.get("/getIssuedBooks", issuedBooksController.getIssuedBooks);
+router.get("/getReturnedBooks", issuedBooksController.getReturnedBooks);
+router.get("/getOverdueBooks", issuedBooksController.getOverdueBooks);
 
 
 module.exports = router;
