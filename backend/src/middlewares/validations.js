@@ -102,3 +102,35 @@ exports.validateNewStudent = [
     next();
   }
 ]
+
+exports.validateIssueBook = [
+  check("bookId").trim().not().isEmpty().withMessage("book Id is Required field!"),
+  check("studentId").trim().not().isEmpty().withMessage("Student Id is Required field!"),
+  check("issuedDate").trim().not().isEmpty().withMessage("Issued Date is Required field!"),
+  check("dueDate").trim().not().isEmpty().withMessage("Due Date is Required field!"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      return res.status(400).json({
+        message: "Issue Book failed!",
+        errors: errors.array(),
+      });
+    }
+    next();
+  }
+]
+
+exports.validateReturnBook = [
+  check("returnDate").trim().not().isEmpty().withMessage("Return Date is Required field!"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      return res.status(400).json({
+        message: "Return Book failed!",
+        errors: errors.array(),
+      });
+    }
+    next();
+  }
+]
+

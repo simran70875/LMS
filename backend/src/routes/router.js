@@ -34,9 +34,12 @@ router.delete("/deleteStudent/:id", studentController.deleteStudent);
 router.put("/editStudentStatus/:id", studentController.editStudentStatus);
 
 //NOTE - Handle issued books
+router.post("/issueNewBook", isValid.validateIssueBook, issuedBooksController.issueBook);
+router.put("/returnBook/:id", isValid.validateReturnBook, issuedBooksController.returnBook);
 router.get("/getIssuedBooks", issuedBooksController.getIssuedBooks);
 router.get("/getReturnedBooks", issuedBooksController.getReturnedBooks);
 router.get("/getOverdueBooks", issuedBooksController.getOverdueBooks);
+router.put("/editIssuedBookStatus/:id", issuedBooksController.editIssuedBookStatus);
 
 
 module.exports = router;
