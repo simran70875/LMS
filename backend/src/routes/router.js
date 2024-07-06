@@ -26,7 +26,7 @@ router.get("/getCatBooks", isValid.validateGetBooks, BooksController.getCatBooks
 router.put("/editBook/:id", isValid.validateNewBook, BooksController.editBook);
 router.delete("/deleteBook/:id", BooksController.deleteBook);
 
-//NOTE - Handle students
+//NOTE - Handle students dsda
 router.post("/addStudent", isValid.validateNewStudent, studentController.addStudent);
 router.get("/getStudents", studentController.getAllStudents);
 router.put("/editStudent/:id", studentController.editStudent);
