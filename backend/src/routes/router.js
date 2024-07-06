@@ -39,7 +39,6 @@ router.put("/returnBook/:id", isValid.validateReturnBook, issuedBooksController.
 router.get("/getIssuedBooks", issuedBooksController.getIssuedBooks);
 router.get("/getReturnedBooks", issuedBooksController.getReturnedBooks);
 router.get("/getOverdueBooks", issuedBooksController.getOverdueBooks);
-
 router.put("/editIssuedBookStatus/:id", issuedBooksController.editIssuedBookStatus);
 
 
