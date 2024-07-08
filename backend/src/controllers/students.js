@@ -1,7 +1,7 @@
 const userSchema = require("../modals/userSchema");
 const ifUserExists = require("../services/isUserExist");
 const { getBcryptedPassword } = require("../utils/bcryptPassword");
-const transporter = require("../utils/nodemailer");
+const createTransporter = require("../utils/nodemailer");
 
 class studentController {
   static addStudent = async (req, res) => {
@@ -39,15 +39,17 @@ class studentController {
 
       //NOTE - save new data
       const data = await newUser.save();
+
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
-        subject: "Welcome to Book.com",
-        text: `Dear ${username},\n\nYour library account has been created successfully.\n\nUsername: ${username}\nPassword: ${password}\n\nBest Regards,\nThe Library Team`,
-        html: "<b>Hello world?</b>", // html body
+        subject: "Test",
+        text: "Hi, this is a test email",
       };
 
-      transporter.sendMail(mailOptions, (error, info) => {
+      let emailTransporter = await createTransporter();
+
+      emailTransporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error("Error while sending email ==> ", error);
           return res.status(500).send({
@@ -72,7 +74,7 @@ class studentController {
 
   static getAllStudents = async (req, res) => {
     try {
-      const allStudents = await userSchema.find({role : 'student'});
+      const allStudents = await userSchema.find({ role: "student" });
       return res.send({ success: true, data: allStudents, message: "" });
     } catch (error) {
       console.error("Error While getting allStudents ==> ", error);
