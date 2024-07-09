@@ -33,6 +33,45 @@ class fineController {
       return res.status(500).send({ success: false, error: error.message });
     }
   };
+  static deleteFine = async (req, res) => {
+    const id = req.params.id;
+    try {
+      const deleteFine = await fineSchema.findByIdAndDelete(id);
+      if(!deleteFine){
+        return res.send({ success: false, message: "Fine not found!" });
+      }
+      return res.send({ success: true, data: deleteFine, message: "Fine Deleted Successfully!" });
+    } catch (error) {
+      console.error("Error While getting AllFines ==> ", error);
+      return res.status(500).send({ success: false, error: error.message });
+    }
+  };
+  static editFine = async (req, res) => {
+    const id = req.params.id;
+    const { issuedBookId, delayedBy, fineAmount, status, notes, paymentMode } = req.body;
+    try {
+      const updateFine = new fineSchema.findByIdAndUpdate(id,{
+        issuedBookId,
+        delayedBy,
+        fineAmount,
+        status,
+        notes,
+        paymentMode,
+      },{new:true});
+      if(!updateFine){
+        return res.send({ success: false, message: "Fine not found!" });
+      }
+
+      return res.send({
+        success: true,
+        data:updateFine,
+        message: "Fine Updated Successfully",
+      });
+    } catch (error) {
+      console.error("Error While updating fine ==> ", error);
+      return res.status(500).send({ success: false, error: error.message });
+    }
+  };
 }
 
 
