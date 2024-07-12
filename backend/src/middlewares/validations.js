@@ -134,3 +134,21 @@ exports.validateReturnBook = [
   }
 ]
 
+exports.validateAddFine = [
+  check("issuedBookId").trim().not().isEmpty().withMessage("issued Book Id is Required!"),
+  check("delayedBy").trim().not().isEmpty().withMessage("delayedBy is Required!"),
+  check("fineAmount").trim().not().isEmpty().withMessage("fineAmount is Required!"),
+  check("status").trim().not().isEmpty().withMessage("status is Required!"),
+  check("paymentMode").trim().not().isEmpty().withMessage("paymentMode is Required!"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      return res.status(400).json({
+        message: "add fine failed!",
+        errors: errors.array(),
+      });
+    }
+    next();
+  }
+]
+

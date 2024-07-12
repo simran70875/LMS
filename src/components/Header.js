@@ -2,14 +2,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FaBell } from "react-icons/fa";
-import {
-  SmallButton,
-  ProfileDesignation,
-  ProfileImage,
-  ProfileInfo,
-  ProfileName,
-  ProfileSection,
-} from "../styles/Profile.Styled";
+import { SmallButton, ProfileDesignation, ProfileImage, ProfileInfo, ProfileName, ProfileSection} from "../styles/Profile.Styled";
 import profile from "../images/profile-picture.jpg";
 import colors from "../styles/colors";
 import { BiLogOut, BiUser } from "react-icons/bi";

@@ -6,6 +6,7 @@ const { categoryController } = require("../controllers/category");
 const { BooksController } = require("../controllers/books");
 const { studentController } = require("../controllers/students");
 const { issuedBooksController } = require("../controllers/issuedBooks");
+const { fineController } = require("../controllers/fine");
 
 router.get("/", AuthController.welcome_msz);
 
@@ -41,6 +42,11 @@ router.get("/getReturnedBooks", issuedBooksController.getReturnedBooks);
 router.get("/getOverdueBooks", issuedBooksController.getOverdueBooks);
 router.put("/editIssuedBookStatus/:id", issuedBooksController.editIssuedBookStatus);
 
+//NOTE - Handle student fines
+router.post("/addFine", isValid.validateAddFine, fineController.addFine);
+router.put("/editFine/:id", isValid.validateAddFine, fineController.editFine);
+router.delete("/deleteFine/:id", fineController.deleteFine);
+router.get("/getFines", fineController.getFines);
 
 
 
