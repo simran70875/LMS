@@ -6,7 +6,7 @@ exports.authenticateToken = (req, res, next) => {
 
   //NOTE -- Check if the authorization header exists and split it to get the token
   const token = authHeader && authHeader.split(" ")[1];
-
+  console.log(token)
   //NOTE -- If no token is found, send a 401 Unauthorized status
   if (token == null) return res.sendStatus(401);
 
@@ -15,8 +15,9 @@ exports.authenticateToken = (req, res, next) => {
 
   //NOTE -- Verify the token using JWT library
   jwt.verify(token, secretKey, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) return res.send.Status(403);
     req.user = user;
+    console.log(req.user);
     next();
   });
 };

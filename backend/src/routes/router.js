@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { AuthController } = require("../controllers/auth");
 const isValid = require("../middlewares/validations");
+
+const { AuthController } = require("../controllers/auth");
 const { categoryController } = require("../controllers/category");
 const { BooksController } = require("../controllers/books");
 const { studentController } = require("../controllers/students");
 const { issuedBooksController } = require("../controllers/issuedBooks");
 const { fineController } = require("../controllers/fine");
+const { authenticateToken } = require("../middlewares/verifyJwtToken");
 
 router.get("/", AuthController.welcome_msz);
 
@@ -15,17 +17,17 @@ router.post("/register", isValid.validateRegisterUser, AuthController.register);
 router.post("/login", isValid.validateLoginUser, AuthController.loginUser);
 
 //NOTE - Handle Categories
-router.post("/addCategory", isValid.validateNewCategory, categoryController.addCategory);
-router.get("/getCategories", categoryController.getCategories);
-router.put("/editCategory/:id", isValid.validateNewCategory, categoryController.editCategory);
-router.delete("/deleteCategory/:id", categoryController.deleteCategory);
+router.post("/addCategory", authenticateToken, isValid.validateNewCategory, categoryController.addCategory);
+router.get("/getCategories", authenticateToken, categoryController.getCategories);
+router.put("/editCategory/:id", authenticateToken, isValid.validateNewCategory, categoryController.editCategory);
+router.delete("/deleteCategory/:id", authenticateToken, categoryController.deleteCategory);
 
 //NOTE - Handle Books
-router.post("/addBook", isValid.validateNewBook, BooksController.addBook);
-router.get("/getBooks", BooksController.getAllBooks);
-router.get("/getCatBooks", isValid.validateGetBooks, BooksController.getCatBooks);
-router.put("/editBook/:id", isValid.validateNewBook, BooksController.editBook);
-router.delete("/deleteBook/:id", BooksController.deleteBook);
+router.post("/addBook", authenticateToken, isValid.validateNewBook, BooksController.addBook);
+router.get("/getBooks", authenticateToken, BooksController.getAllBooks);
+router.get("/getCatBooks", authenticateToken, isValid.validateGetBooks, BooksController.getCatBooks);
+router.put("/editBook/:id", authenticateToken, isValid.validateNewBook, BooksController.editBook);
+router.delete("/deleteBook/:id", authenticateToken, BooksController.deleteBook);
 
 //NOTE - Handle students dsda
 router.post("/addStudent", isValid.validateNewStudent, studentController.addStudent);

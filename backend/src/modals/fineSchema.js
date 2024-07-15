@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const fineSchema = new mongoose.Schema({
-  issuedBookId: { type: Schema.Types.ObjectId, ref: "users", required: true },
+  issuedBookId: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
   delayedBy: { type: Number },
   fineAmount: {
     type: Number,
