@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   Hero,
@@ -18,6 +18,8 @@ import {
 } from "../../../styles/header.style";
 import { SmallButton } from "../../../styles/Profile.Styled";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import path from "../../../config/paths";
 
 const SliderContainer = styled.section`
   background-color: ${colors.secondary};
@@ -28,6 +30,36 @@ const SliderContainer = styled.section`
 
 const Register = () => {
   const navigate = useNavigate();
+
+  const [formState, setFormState] = useState({
+    role: "student",
+    username: "",
+    phone: null,
+    email: "",
+    password: "",
+    confirmPassword: "",
+    image: "",
+    address: "",
+    course: "",
+    courseYears: null,
+  });
+
+  const onChangeValue = (e) => {
+    const { name, value } = e.target;
+    setFormState({ ...formState, [name]: value });
+  };
+
+  function register() {
+    axios
+      .post(path.register, formState)
+      .then((response) => {
+        console.log("Response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   return (
     <SliderContainer>
       <HeaderContainer>
@@ -80,15 +112,21 @@ const Register = () => {
                 <FormInput
                   style={{ width: "100%" }}
                   type="text"
-                  placeholder="Mobile Number"
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-envelope-open" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
+                  name="username"
                   placeholder="Student Name"
+                  value={formState.username}
+                  onChange={onChangeValue}
+                />
+              </SearchBar>
+              <SearchBar className="col-md-6">
+                <InputIcon className="fas fa-fa-solid fa-phone" />
+                <FormInput
+                  type="text"
+                  name="phone"
+                  style={{ width: "100%" }}
+                  placeholder="Mobile No."
+                  value={formState.phone}
+                  onChange={onChangeValue}
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
@@ -96,26 +134,69 @@ const Register = () => {
                 <FormInput
                   type="text"
                   style={{ width: "100%" }}
-                  placeholder="Student Email Id"
+                  name="email"
+                  placeholder="Email Id"
+                  value={formState.email}
+                  onChange={onChangeValue}
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-envelope-open" />
+                <InputIcon className="fas fa-fa-solid fa-map" />
                 <FormInput
                   type="text"
                   style={{ width: "100%" }}
+                  name="address"
+                  placeholder="Address"
+                  value={formState.address}
+                  onChange={onChangeValue}
+                />
+              </SearchBar>
+              <SearchBar className="col-md-6">
+                <InputIcon className="fas fa-fa-solid fa-school" />
+                <FormInput
+                  type="text"
+                  style={{ width: "100%" }}
+                  name="course"
+                  placeholder="Course"
+                  value={formState.course}
+                  onChange={onChangeValue}
+                />
+              </SearchBar>
+              <SearchBar className="col-md-6">
+                <InputIcon className="fas fa-fa-solid fa-school" />
+                <FormInput
+                  type="text"
+                  style={{ width: "100%" }}
+                  name="courseYear"
+                  placeholder="Course Year"
+                  value={formState.courseYears}
+                  onChange={onChangeValue}
+                />
+              </SearchBar>
+              <SearchBar className="col-md-6">
+                <InputIcon className="fas fa-fa-solid fa-lock" />
+                <FormInput
+                  type="text"
+                  style={{ width: "100%" }}
+                  name="password"
                   placeholder="Password"
+                  value={formState.password}
+                  onChange={onChangeValue}
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-envelope-open" />
+                <InputIcon className="fas fa-fa-solid fa-lock" />
                 <FormInput
                   type="text"
                   style={{ width: "100%" }}
+                  name="confirmPassword"
                   placeholder="Confirm Password"
+                  value={formState.confirmPassword}
+                  onChange={onChangeValue}
                 />
               </SearchBar>
               <SuccessButton
+                onClick={() => register()}
                 className="mt-4"
                 style={{ width: "100%", borderRadius: 0 }}
               >
