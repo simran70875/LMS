@@ -51,10 +51,11 @@ class AuthController {
   //REVIEW - ========================== User Login =================================
   static loginUser = async (req, res) => {
     const { username, password } = req.body;
-    const user = await userSchema.findOne({ username });
+    
     
     try {
       //NOTE - check user exists
+      const user = await userSchema.findOne({ username });
       console.log("user", user)
       if (!user) {
         return res.json({success: false, message: "User not found" });
