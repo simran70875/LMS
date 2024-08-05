@@ -43,6 +43,7 @@ const Register = () => {
     course: "",
     courseYears: 0,
   });
+  const [msz, setMsz] = useState("");
 
   const onChangeValue = (e) => {
     const { name, value } = e.target;
@@ -54,9 +55,11 @@ const Register = () => {
     console.log("formState:", formState);
     try {
       const response = await postsWithoutToken(path.register, formState);
+      setMsz(response.data.message);
       console.log("response", response);
     } catch (error) {
-      console.log("register error", error);
+      console.log("register error", error.response.data.message);
+      setMsz(error.response.data.message);
     }
   };
 
@@ -107,9 +110,11 @@ const Register = () => {
           >
             <form className="row" onSubmit={register}>
               <HeadingLarge style={{ fontSize: "1em" }}>Register</HeadingLarge>
+              <Highlight>{msz}</Highlight>
               <SearchBar className="col-md-6">
                 <InputIcon className="fas fa-solid fa-user " />
                 <FormInput
+                  required
                   style={{ width: "100%" }}
                   type="text"
                   name="username"
@@ -121,6 +126,7 @@ const Register = () => {
               <SearchBar className="col-md-6">
                 <InputIcon className="fas fa-solid fa-phone" />
                 <FormInput
+                  required
                   type="number"
                   name="phone"
                   style={{ width: "100%" }}
@@ -132,6 +138,7 @@ const Register = () => {
               <SearchBar className="col-md-6">
                 <InputIcon className="fas fa-solid fa-envelope-open" />
                 <FormInput
+                  required
                   type="text"
                   style={{ width: "100%" }}
                   name="email"
@@ -176,6 +183,7 @@ const Register = () => {
               <SearchBar className="col-md-6">
                 <InputIcon className="fas fa-solid fa-lock" />
                 <FormInput
+                  required
                   type="password"
                   style={{ width: "100%" }}
                   name="password"
@@ -187,6 +195,7 @@ const Register = () => {
               <SearchBar className="col-md-6">
                 <InputIcon className="fas fa-solid fa-lock" />
                 <FormInput
+                  required
                   type="text"
                   style={{ width: "100%" }}
                   name="confirmPassword"
