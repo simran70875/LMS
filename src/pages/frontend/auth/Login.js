@@ -46,7 +46,9 @@ const Login = () => {
     try {
       const response = await postsWithoutToken(path.login, formState);
       console.log("response", response.data);
-    } catch (error) {}
+    } catch (error) {
+      console.log("login error", error);
+    }
   };
 
   return (

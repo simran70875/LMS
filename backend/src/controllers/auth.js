@@ -44,7 +44,7 @@ class AuthController {
 
     } catch (error) {
       console.error("Error While Registering ==> ", error);
-      return res.status(500).send({ success: false, error: error.message });
+      return res.send.status(500).send({ success: false, error: error.message });
     }
   };
 

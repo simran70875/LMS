@@ -18,8 +18,8 @@ import {
 } from "../../../styles/header.style";
 import { SmallButton } from "../../../styles/Profile.Styled";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import path from "../../../config/paths";
+import { postsWithoutToken } from "../../../services/post";
 
 const SliderContainer = styled.section`
   background-color: ${colors.secondary};
@@ -34,14 +34,14 @@ const Register = () => {
   const [formState, setFormState] = useState({
     role: "student",
     username: "",
-    phone: null,
+    phone: 0,
     email: "",
     password: "",
     confirmPassword: "",
     image: "",
     address: "",
     course: "",
-    courseYears: null,
+    courseYears: 0,
   });
 
   const onChangeValue = (e) => {
@@ -49,16 +49,16 @@ const Register = () => {
     setFormState({ ...formState, [name]: value });
   };
 
-  function register() {
-    axios
-      .post(path.register, formState)
-      .then((response) => {
-        console.log("Response:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
+  const register = async (e) => {
+    e.preventDefault();
+    console.log("formState:", formState);
+    try {
+      const response = await postsWithoutToken(path.register, formState);
+      console.log("response", response);
+    } catch (error) {
+      console.log("register error", error);
+    }
+  };
 
   return (
     <SliderContainer>
@@ -105,7 +105,7 @@ const Register = () => {
               borderRadius: 10,
             }}
           >
-            <form className="row">
+            <form className="row" onSubmit={register}>
               <HeadingLarge style={{ fontSize: "1em" }}>Register</HeadingLarge>
               <SearchBar className="col-md-6">
                 <InputIcon className="fas fa-solid fa-user " />
@@ -119,9 +119,9 @@ const Register = () => {
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-phone" />
+                <InputIcon className="fas fa-solid fa-phone" />
                 <FormInput
-                  type="text"
+                  type="number"
                   name="phone"
                   style={{ width: "100%" }}
                   placeholder="Mobile No."
@@ -130,7 +130,7 @@ const Register = () => {
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-envelope-open" />
+                <InputIcon className="fas fa-solid fa-envelope-open" />
                 <FormInput
                   type="text"
                   style={{ width: "100%" }}
@@ -141,7 +141,7 @@ const Register = () => {
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-map" />
+                <InputIcon className="fas fa-solid fa-map" />
                 <FormInput
                   type="text"
                   style={{ width: "100%" }}
@@ -152,7 +152,7 @@ const Register = () => {
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-school" />
+                <InputIcon className="fas fa-solid fa-school" />
                 <FormInput
                   type="text"
                   style={{ width: "100%" }}
@@ -163,20 +163,20 @@ const Register = () => {
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-school" />
+                <InputIcon className="fas fa-solid fa-school" />
                 <FormInput
-                  type="text"
+                  type="number"
+                  name="courseYears"
                   style={{ width: "100%" }}
-                  name="courseYear"
                   placeholder="Course Year"
                   value={formState.courseYears}
                   onChange={onChangeValue}
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-lock" />
+                <InputIcon className="fas fa-solid fa-lock" />
                 <FormInput
-                  type="text"
+                  type="password"
                   style={{ width: "100%" }}
                   name="password"
                   placeholder="Password"
@@ -185,7 +185,7 @@ const Register = () => {
                 />
               </SearchBar>
               <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-lock" />
+                <InputIcon className="fas fa-solid fa-lock" />
                 <FormInput
                   type="text"
                   style={{ width: "100%" }}
@@ -196,7 +196,7 @@ const Register = () => {
                 />
               </SearchBar>
               <SuccessButton
-                onClick={() => register()}
+                type="submit"
                 className="mt-4"
                 style={{ width: "100%", borderRadius: 0 }}
               >
