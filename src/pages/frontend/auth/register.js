@@ -20,6 +20,7 @@ import { SmallButton } from "../../../styles/Profile.Styled";
 import { useNavigate } from "react-router-dom";
 import path from "../../../config/paths";
 import { postsWithoutToken } from "../../../services/post";
+import OtpInput from "react-otp-input";
 
 const SliderContainer = styled.section`
   background-color: ${colors.secondary};
@@ -44,6 +45,8 @@ const Register = () => {
     courseYears: 0,
   });
   const [msz, setMsz] = useState("");
+  const [otpView, setOtpView] = useState(false);
+  const [otp, setOtp] = useState("");
 
   const onChangeValue = (e) => {
     const { name, value } = e.target;
@@ -108,129 +111,172 @@ const Register = () => {
               borderRadius: 10,
             }}
           >
-            <form className="row" onSubmit={register}>
-              <HeadingLarge style={{ fontSize: "1em" }}>Register</HeadingLarge>
-              <Highlight>{msz}</Highlight>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-user " />
-                <FormInput
-                  required
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="username"
-                  placeholder="Student Name"
-                  value={formState.username}
-                  onChange={onChangeValue}
+            {otpView ? (
+              <>
+                <HeadingLarge style={{ fontSize: "1em",  marginBottom: 5, }}>
+                  Verify OTP
+                </HeadingLarge>
+                <Tagline
+                  style={{
+                    marginBottom: 10,
+                    width: "100%",
+                    marginTop: 5,
+                  }}
+                >
+                 Please enter the OTP sent to your phone number to verify your identity.
+                </Tagline>
+                <Highlight>{msz}</Highlight>
+                <OtpInput
+                  inputStyle={{
+                    width: 50,
+                    height: 50,
+                    fontSize: 20,
+                    marginRight: 20,
+                    backgroundColor: "#fff0",
+                    borderColor: "#bbbbbd",
+                    borderWidth: 1,
+                    borderRadius: 5,
+                  }}
+                  value={otp}
+                  onChange={setOtp}
+                  numInputs={6}
+                  // renderSeparator={<span>-</span>}
+                  renderInput={(props) => <input {...props} />}
                 />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-phone" />
-                <FormInput
-                  required
-                  type="number"
-                  name="phone"
-                  style={{ width: "100%" }}
-                  placeholder="Mobile No."
-                  value={formState.phone}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-envelope-open" />
-                <FormInput
-                  required
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="email"
-                  placeholder="Email Id"
-                  value={formState.email}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-map" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="address"
-                  placeholder="Address"
-                  value={formState.address}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-school" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="course"
-                  placeholder="Course"
-                  value={formState.course}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-school" />
-                <FormInput
-                  type="number"
-                  name="courseYears"
-                  style={{ width: "100%" }}
-                  placeholder="Course Year"
-                  value={formState.courseYears}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-lock" />
-                <FormInput
-                  required
-                  type="password"
-                  style={{ width: "100%" }}
-                  name="password"
-                  placeholder="Password"
-                  value={formState.password}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-lock" />
-                <FormInput
-                  required
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  value={formState.confirmPassword}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SuccessButton
-                type="submit"
-                className="mt-4"
-                style={{ width: "100%", borderRadius: 0 }}
-              >
-                Register
-              </SuccessButton>
-            </form>
-            <Tagline
-              style={{
-                marginBottom: 0,
-                width: "100%",
-                textAlign: "center",
-                marginTop: 5,
-              }}
-            >
-              Do you have an account.{" "}
-              <Highlight
-                style={{
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                }}
-                onClick={() => navigate("/login")}
-              >
-                Login
-              </Highlight>
-            </Tagline>
+                <SuccessButton
+                  className="mt-4"
+                  style={{ width: "30%", borderRadius: 0 }}
+                >
+                  Verify
+                </SuccessButton>
+              </>
+            ) : (
+              <form className="row" onSubmit={register}>
+                <HeadingLarge style={{ fontSize: "1em" }}>
+                  Register
+                </HeadingLarge>
+                <Highlight>{msz}</Highlight>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-user " />
+                  <FormInput
+                    required
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="username"
+                    placeholder="Student Name"
+                    value={formState.username}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-phone" />
+                  <FormInput
+                    required
+                    type="number"
+                    name="phone"
+                    style={{ width: "100%" }}
+                    placeholder="Mobile No."
+                    value={formState.phone}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-envelope-open" />
+                  <FormInput
+                    required
+                    type="text"
+                    style={{ width: "100%" }}
+                    name="email"
+                    placeholder="Email Id"
+                    value={formState.email}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-map" />
+                  <FormInput
+                    type="text"
+                    style={{ width: "100%" }}
+                    name="address"
+                    placeholder="Address"
+                    value={formState.address}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-school" />
+                  <FormInput
+                    type="text"
+                    style={{ width: "100%" }}
+                    name="course"
+                    placeholder="Course"
+                    value={formState.course}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-school" />
+                  <FormInput
+                    type="number"
+                    name="courseYears"
+                    style={{ width: "100%" }}
+                    placeholder="Course Year"
+                    value={formState.courseYears}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-lock" />
+                  <FormInput
+                    required
+                    type="password"
+                    style={{ width: "100%" }}
+                    name="password"
+                    placeholder="Password"
+                    value={formState.password}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-lock" />
+                  <FormInput
+                    required
+                    type="text"
+                    style={{ width: "100%" }}
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    value={formState.confirmPassword}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SuccessButton
+                  type="submit"
+                  className="mt-4"
+                  style={{ width: "100%", borderRadius: 0 }}
+                >
+                  Register
+                </SuccessButton>
+                <Tagline
+                  style={{
+                    marginBottom: 0,
+                    width: "100%",
+                    textAlign: "center",
+                    marginTop: 5,
+                  }}
+                >
+                  Do you have an account.{" "}
+                  <Highlight
+                    style={{
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                    onClick={() => navigate("/login")}
+                  >
+                    Login
+                  </Highlight>
+                </Tagline>
+              </form>
+            )}
           </div>
         </Hero>
       </div>

@@ -21,6 +21,8 @@ import { SmallButton } from "../../../styles/Profile.Styled";
 import { useNavigate } from "react-router-dom";
 import path from "../../../config/paths";
 import { postsWithoutToken } from "../../../services/post";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../../store/actions/authActions"; 
 
 const SliderContainer = styled.section`
   background-color: ${colors.secondary};
@@ -35,6 +37,8 @@ const Login = () => {
     username: "",
     password: "",
   });
+  const [msz, setMsz] = useState("");
+  const dispatch = useDispatch();
 
   const onChangeValue = (e) => {
     const { name, value } = e.target;
@@ -46,8 +50,22 @@ const Login = () => {
     try {
       const response = await postsWithoutToken(path.login, formState);
       console.log("response", response.data);
+      dispatch(
+        loginSuccess(
+          response.data.token,
+          response.data.role,
+          response.data._id
+        )
+      );
+      setMsz(response.data.message);
+      navigate("/dashboard");
     } catch (error) {
       console.log("login error", error);
+      if (error.response.data.errors) {
+        setMsz(error.response.data.errors.map((item) => item.msg).join(", "));
+      } else {
+        setMsz(error.response.data.message);
+      }
     }
   };
 
@@ -98,6 +116,7 @@ const Login = () => {
           >
             <div style={{ margin: "auto", display: "block", width: "50%" }}>
               <HeadingLarge style={{ fontSize: "1em" }}>Login</HeadingLarge>
+              <Highlight>{msz}</Highlight>
               <SearchBar>
                 <InputIcon className="fas fa-solid fa-user " />
                 <FormInput

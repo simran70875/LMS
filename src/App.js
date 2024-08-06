@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GlobalStyles from "./styles/GlobalStyles";
 import Dashboard from "./pages/dashboard";
@@ -15,8 +15,15 @@ import Requests from "./pages/requestsBooks";
 import LibraryManagement from "./pages/frontend";
 import Login from "./pages/frontend/auth/Login";
 import Register from "./pages/frontend/auth/register";
+import PrivateRoute from "./components/PrivateRoute"; // Import PrivateRoute
+import { useSelector } from "react-redux";
 
 const App = () => {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+   useEffect(() =>{
+    console.log("isLoggedIn ==>" ,isLoggedIn);
+   })
+  
   return (
     <Router>
       <GlobalStyles />
@@ -24,17 +31,17 @@ const App = () => {
         <Route path="/" element={<LibraryManagement />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="catalog" element={<Catalog />} />
-          <Route path="users" element={<Users />} />
-          <Route path="checkoutAndReturns" element={<CheckoutAndReturns />} />
-          <Route path="issued" element={<Issued />} />
-          <Route path="returned" element={<Returned />} />
-          <Route path="fines" element={<Payments />} />
-          <Route path="OnlineDues" element={<PaidDues />} />
-          <Route path="updateProfile" element={<UpdateProfile />} />
-          <Route path="requests" element={<Requests />} />
+        <Route path="/dashboard" element={<PrivateRoute element={<Layout />} />}>
+          <Route index element={<PrivateRoute element={<Dashboard />} />} />
+          <Route path="catalog" element={<PrivateRoute element={<Catalog />} />} />
+          <Route path="users" element={<PrivateRoute element={<Users />} />} />
+          <Route path="checkoutAndReturns" element={<PrivateRoute element={<CheckoutAndReturns />} />} />
+          <Route path="issued" element={<PrivateRoute element={<Issued />} />} />
+          <Route path="returned" element={<PrivateRoute element={<Returned />} />} />
+          <Route path="fines" element={<PrivateRoute element={<Payments />} />} />
+          <Route path="paidDues" element={<PrivateRoute element={<PaidDues />} />} />
+          <Route path="updateProfile" element={<PrivateRoute element={<UpdateProfile />} />} />
+          <Route path="requests" element={<PrivateRoute element={<Requests />} />} />
         </Route>
       </Routes>
     </Router>

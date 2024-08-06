@@ -72,14 +72,14 @@ const ManageFines = () => {
           <IconWrapperButton
             style={{ width: 30, height: 30, borderRadius: 6, padding: 0 }}
             onClick={() => openModal(params.data)}
-            bgColor={colors.light_green}
+            $bgcolor={colors.light_green}
           >
             <RiMailAddFill size={14} />
           </IconWrapperButton>
           <IconWrapperButton
             style={{ width: 30, height: 30, borderRadius: 6, padding: 0 }}
             onClick={() => {}}
-            bgColor={colors.light_purple}
+            $bgcolor={colors.light_purple}
           >
             <AiOutlineHistory size={14} />
           </IconWrapperButton>
@@ -87,14 +87,14 @@ const ManageFines = () => {
           <IconWrapperButton
             style={{ width: 30, height: 30, borderRadius: 6, padding: 0 }}
             onClick={() => {}}
-            bgColor={colors.primary2}
+            $bgcolor={colors.primary2}
           >
             <AiFillEdit size={14} />
           </IconWrapperButton>
           <IconWrapperButton
             style={{ width: 30, height: 30, borderRadius: 6, padding: 0 }}
             onClick={() => setDeleteModal(true)}
-            bgColor={colors.light_red}
+            $bgcolor={colors.light_red}
           >
             <AiFillDelete size={14} />
           </IconWrapperButton>

@@ -44,7 +44,7 @@ class AuthController {
 
     } catch (error) {
       console.error("Error While Registering ==> ", error);
-      return res.send.status(500).send({ success: false, error: error.message });
+      return res.send.status(500).send({ success: false, message: error.message });
     }
   };
 
@@ -56,7 +56,6 @@ class AuthController {
     try {
       //NOTE - check user exists
       const user = await userSchema.findOne({ username });
-      console.log("user", user)
       if (!user) {
         return res.json({success: false, message: "User not found" });
       }
@@ -66,11 +65,14 @@ class AuthController {
 
       //NOTE - add token to response
       const token = await getJwtToken(user._id);
-      return res.send({ success: true, token , message: "Login Successfully" });
+      const data = {...user._doc, token};
+
+      //NOTE - send response
+      return res.send({ success: true, data , message: "Login Successfully" });
       
     } catch (error) {
       console.error("Error While login ==> ", error);
-      return res.status(500).send({ success: false, error: error.message });
+      return res.status(500).send({ success: false, message: error.message });
     }
   }
 

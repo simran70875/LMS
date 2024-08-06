@@ -36,7 +36,7 @@ export const IconWrapperButton = styled.button`
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 10px;
-  background-color: ${(props) => props.bgColor || "#f0f0f0"};
+  background-color: ${(props) => props.$bgcolor || "#f0f0f0"};
   display: flex;
   justify-content: center;
   align-items: center;
