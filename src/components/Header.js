@@ -15,7 +15,7 @@ import colors from "../styles/colors";
 import { BiLogOut, BiUser } from "react-icons/bi";
 import { Button } from "../styles/SectionTitle.Styled";
 import { useDispatch } from "react-redux";
-import { logout } from "../store/actions/authActions";
+import { logout } from "../store/reducers/authReducer";
 import { useNavigate } from "react-router-dom";
 
 const HeaderContainer = styled.div`

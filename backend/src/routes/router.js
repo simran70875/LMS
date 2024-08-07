@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const isValid = require("../middlewares/validations");
-
 const { AuthController } = require("../controllers/auth");
 const { categoryController } = require("../controllers/category");
 const { BooksController } = require("../controllers/books");
@@ -24,8 +23,8 @@ router.delete("/deleteCategory/:id", authenticateToken, categoryController.delet
 
 //NOTE - Handle Books
 router.post("/addBook", authenticateToken, isValid.validateNewBook, BooksController.addBook);
-router.get("/getBooks", authenticateToken, BooksController.getAllBooks);
-router.get("/getCatBooks", authenticateToken, isValid.validateGetBooks, BooksController.getCatBooks);
+router.get("/getBooks", BooksController.getAllBooks);
+router.get("/getCatBooks", isValid.validateGetBooks, BooksController.getCatBooks);
 router.put("/editBook/:id", authenticateToken, isValid.validateNewBook, BooksController.editBook);
 router.delete("/deleteBook/:id", authenticateToken, BooksController.deleteBook);
 

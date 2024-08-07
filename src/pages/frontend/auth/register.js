@@ -21,6 +21,9 @@ import { useNavigate } from "react-router-dom";
 import path from "../../../config/paths";
 import { postsWithoutToken } from "../../../services/post";
 import OtpInput from "react-otp-input";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import { auth } from "./firebase";
 
 const SliderContainer = styled.section`
   background-color: ${colors.secondary};
@@ -35,7 +38,7 @@ const Register = () => {
   const [formState, setFormState] = useState({
     role: "student",
     username: "",
-    phone: 0,
+    phone: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -47,22 +50,68 @@ const Register = () => {
   const [msz, setMsz] = useState("");
   const [otpView, setOtpView] = useState(false);
   const [otp, setOtp] = useState("");
+  const [final, setFinal] = useState(null);
 
   const onChangeValue = (e) => {
     const { name, value } = e.target;
     setFormState({ ...formState, [name]: value });
   };
 
+  const sendOtp = async (e) => {
+    e.preventDefault();
+    const phoneNumber = `+${formState.phone}`;
+    const phoneRegex = /^\+\d{10,15}$/;
+  
+    if (!phoneRegex.test(phoneNumber)) {
+      setMsz("Please enter a valid phone number.");
+      return;
+    }
+  
+    try {
+      // Make sure the container ID is correct and the element exists
+      const recaptchaContainer = document.getElementById("recaptcha-container");
+      if (!recaptchaContainer) {
+        throw new Error("reCAPTCHA container not found");
+      }
+  
+      // Initialize RecaptchaVerifier
+      const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        },
+        'expired-callback': () => {
+          // Handle reCAPTCHA expiration
+          console.warn("reCAPTCHA expired, please try again.");
+        }
+      });
+  
+      // Send OTP
+      const result = await auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
+      setFinal(result);
+      setOtpView(true);
+      setMsz("OTP sent to your phone number.");
+    } catch (err) {
+      setMsz("Failed to send OTP. Please try again.");
+      console.error("sendOtp error:", err);
+    }
+  };
+  
+
   const register = async (e) => {
     e.preventDefault();
-    console.log("formState:", formState);
+    if (!otp || !final) {
+      setMsz("Please enter the OTP.");
+      return;
+    }
+
     try {
+      await final.confirm(otp);
       const response = await postsWithoutToken(path.register, formState);
       setMsz(response.data.message);
-      console.log("response", response);
-    } catch (error) {
-      console.log("register error", error.response.data.message);
-      setMsz(error.response.data.message);
+    } catch (err) {
+      setMsz("Invalid OTP or registration failed. Please try again.");
+      console.error("Register error:", err);
     }
   };
 
@@ -111,9 +160,10 @@ const Register = () => {
               borderRadius: 10,
             }}
           >
+            <div id="recaptcha-container"></div>
             {otpView ? (
               <>
-                <HeadingLarge style={{ fontSize: "1em",  marginBottom: 5, }}>
+                <HeadingLarge style={{ fontSize: "1em", marginBottom: 5 }}>
                   Verify OTP
                 </HeadingLarge>
                 <Tagline
@@ -123,7 +173,7 @@ const Register = () => {
                     marginTop: 5,
                   }}
                 >
-                 Please enter the OTP sent to your phone number to verify your identity.
+                  Please enter the OTP sent to your phone number to verify your identity.
                 </Tagline>
                 <Highlight>{msz}</Highlight>
                 <OtpInput
@@ -140,10 +190,10 @@ const Register = () => {
                   value={otp}
                   onChange={setOtp}
                   numInputs={6}
-                  // renderSeparator={<span>-</span>}
                   renderInput={(props) => <input {...props} />}
                 />
                 <SuccessButton
+                  onClick={register}
                   className="mt-4"
                   style={{ width: "30%", borderRadius: 0 }}
                 >
@@ -151,7 +201,7 @@ const Register = () => {
                 </SuccessButton>
               </>
             ) : (
-              <form className="row" onSubmit={register}>
+              <form className="row" onSubmit={sendOtp}>
                 <HeadingLarge style={{ fontSize: "1em" }}>
                   Register
                 </HeadingLarge>
@@ -172,7 +222,7 @@ const Register = () => {
                   <InputIcon className="fas fa-solid fa-phone" />
                   <FormInput
                     required
-                    type="number"
+                    type="text"
                     name="phone"
                     style={{ width: "100%" }}
                     placeholder="Mobile No."
@@ -184,7 +234,7 @@ const Register = () => {
                   <InputIcon className="fas fa-solid fa-envelope-open" />
                   <FormInput
                     required
-                    type="text"
+                    type="email"
                     style={{ width: "100%" }}
                     name="email"
                     placeholder="Email Id"
@@ -241,7 +291,7 @@ const Register = () => {
                   <InputIcon className="fas fa-solid fa-lock" />
                   <FormInput
                     required
-                    type="text"
+                    type="password"
                     style={{ width: "100%" }}
                     name="confirmPassword"
                     placeholder="Confirm Password"
@@ -264,7 +314,7 @@ const Register = () => {
                     marginTop: 5,
                   }}
                 >
-                  Do you have an account.{" "}
+                  Do you have an account?{" "}
                   <Highlight
                     style={{
                       cursor: "pointer",

@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import path from "../../../config/paths";
 import { postsWithoutToken } from "../../../services/post";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../../store/actions/authActions"; 
+import { loginSuccess } from "../../../store/reducers/authReducer"; 
 
 const SliderContainer = styled.section`
   background-color: ${colors.secondary};
@@ -49,14 +49,14 @@ const Login = () => {
     console.log("formState:", formState);
     try {
       const response = await postsWithoutToken(path.login, formState);
-      console.log("response", response.data);
       dispatch(
-        loginSuccess(
-          response.data.token,
-          response.data.role,
-          response.data._id
-        )
+        loginSuccess({
+          token: response.data.token,
+          role: response.data.role,
+          userid: response.data.userid,
+        })
       );
+      console.log("response", response.data);
       setMsz(response.data.message);
       navigate("/dashboard");
     } catch (error) {

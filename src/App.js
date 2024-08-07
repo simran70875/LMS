@@ -19,7 +19,7 @@ import PrivateRoute from "./components/PrivateRoute"; // Import PrivateRoute
 import { useSelector } from "react-redux";
 
 const App = () => {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
    useEffect(() =>{
     console.log("isLoggedIn ==>" ,isLoggedIn);
    })
