@@ -67,16 +67,7 @@ class BooksController {
 
   //REVIEW - ========================== get books =================================
   static getAllBooks = async (req, res) => {
-    const id = req.user.userId;
     try {
-      const getUser = await userSchema.findById(id);
-      if (!getUser) {
-        return res.send({ success: false, message: "User Not Found!" });
-      }
-
-      if (getUser.role !== "librarian") {
-        return res.send({ success: false, message: "Access Denied!" });
-      }
       const allBooks = await bookSchema.find();
       return res.send({ success: true, data: allBooks, message: "" });
     } catch (error) {
@@ -87,17 +78,10 @@ class BooksController {
 
   //REVIEW - ========================== get books category wise =================================
   static getCatBooks = async (req, res) => {
-    const id = req.user.userId;
+
     const { category } = req.body;
     try {
-      const getUser = await userSchema.findById(id);
-      if (!getUser) {
-        return res.send({ success: false, message: "User Not Found!" });
-      }
-
-      if (getUser.role !== "librarian") {
-        return res.send({ success: false, message: "Access Denied!" });
-      }
+     
       // Find the category ID based on the category name
       const getCategory = await categorySchema.findOne({ cateName: category });
       if (!getCategory) {

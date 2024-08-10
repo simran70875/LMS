@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const morgan = require("morgan");
+
+const cors = require("cors");
+app.use(cors());
+
 const connectDB = require("./config/dbConnect");
 const router = require("./routes/router");
 

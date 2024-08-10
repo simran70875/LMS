@@ -47,28 +47,28 @@ const Overview = () => {
   return (
     <OverviewContainer>
       <OverviewCard>
-        <IconWrapperButton bgColor={colors.light_green}>
+        <IconWrapperButton $bgcolor={colors.light_green}>
           <FaBook size={15} />
         </IconWrapperButton>
         <CardTitle>Total Books</CardTitle>
         <CardValue>500</CardValue>
       </OverviewCard>
       <OverviewCard>
-        <IconWrapperButton bgColor={colors.primary2}>
+        <IconWrapperButton $bgcolor={colors.primary2}>
           <FaUser size={15} />
         </IconWrapperButton>
         <CardTitle>Total Students</CardTitle>
         <CardValue>200</CardValue>
       </OverviewCard>
       <OverviewCard>
-        <IconWrapperButton bgColor={colors.light_red}>
+        <IconWrapperButton $bgcolor={colors.light_red}>
           <FaArrowUp size={15} />
         </IconWrapperButton>
         <CardTitle>Books Issued</CardTitle>
         <CardValue>120</CardValue>
       </OverviewCard>
       <OverviewCard>
-        <IconWrapperButton bgColor={colors.light_purple}>
+        <IconWrapperButton $bgcolor={colors.light_purple}>
           <FaArrowDown size={15} />
         </IconWrapperButton>
         <CardTitle>Books Overdue</CardTitle>

@@ -71,7 +71,7 @@ const Issued = () => {
               padding: 0,
             }}
             onClick={() => setReturnModalIsOpen(true)}
-            bgColor={colors.light_green}
+            $bgcolor={colors.light_green}
           >
             <GiReturnArrow size={12} />
           </IconWrapperButton>
@@ -83,7 +83,7 @@ const Issued = () => {
               padding: 0,
             }}
             onClick={() => openModal(params.data)}
-            bgColor={colors.light_red}
+            $bgcolor={colors.light_red}
           >
             <RiMailFill size={14} />
           </IconWrapperButton>

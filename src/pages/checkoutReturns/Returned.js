@@ -65,7 +65,7 @@ const Returned = () => {
               padding: 0,
             }}
             onClick={() => setReturnModalIsOpen(true)}
-            bgColor={colors.light_green}
+            $bgcolor={colors.light_green}
           >
             <GiReturnArrow size={12} />{" "}
             <p style={{ marginLeft: 5, marginBottom: 0 }}>Re-Issue</p>

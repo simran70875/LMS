@@ -2,11 +2,21 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FaBell } from "react-icons/fa";
-import { SmallButton, ProfileDesignation, ProfileImage, ProfileInfo, ProfileName, ProfileSection} from "../styles/Profile.Styled";
+import {
+  SmallButton,
+  ProfileDesignation,
+  ProfileImage,
+  ProfileInfo,
+  ProfileName,
+  ProfileSection,
+} from "../styles/Profile.Styled";
 import profile from "../images/profile-picture.jpg";
 import colors from "../styles/colors";
 import { BiLogOut, BiUser } from "react-icons/bi";
-import {Link} from "react-router-dom";
+import { Button } from "../styles/SectionTitle.Styled";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/reducers/authReducer";
+import { useNavigate } from "react-router-dom";
 
 const HeaderContainer = styled.div`
   width: calc(100% - 250px);
@@ -69,13 +79,17 @@ const DropdownMenu = styled.div`
   border: 1px solid #eee;
 `;
 
-const DropdownItem = styled(Link)`
+const DropdownItem = styled(Button)`
   padding: 0 7px;
   cursor: pointer;
+  border-radius: 0;
   font-size: 12px;
+  background-color: #fff0;
   &:hover {
     background-color: #f0f0f0;
+    color: #000;
   }
+  box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.05);
 `;
 
 const NotificationsDropdown = styled(DropdownMenu)`
@@ -88,9 +102,10 @@ const ProfileDropdown = styled(DropdownMenu)`
 `;
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-
   const toggleNotifications = () => setNotificationsOpen(!notificationsOpen);
   const toggleProfile = () => setProfileOpen(!profileOpen);
 
@@ -108,6 +123,12 @@ const Header = () => {
       text: "Book borrowed by Jane Smith",
     },
   ];
+
+  const logoutUser = () => {
+    console.log("Logout");
+    dispatch(logout());
+    navigate("/login");
+  };
 
   return (
     <HeaderContainer>
@@ -166,7 +187,7 @@ const Header = () => {
               </div>
               <div style={{ display: "flex", padding: 5 }}>
                 <BiLogOut />
-                <DropdownItem to="/login">Logout</DropdownItem>
+                <DropdownItem onClick={logoutUser}>Logout</DropdownItem>
               </div>
             </ProfileDropdown>
           )}

@@ -91,7 +91,7 @@ const RequestsContent = () => {
               padding: 0,
             }}
             onClick={() => setApproveModal(true)}
-            bgColor={colors.light_green}
+            $bgcolor={colors.light_green}
           >
             <FaCheck size={12} />
           </IconWrapperButton>
@@ -103,7 +103,7 @@ const RequestsContent = () => {
               padding: 0,
             }}
             onClick={() => setDeleteModal(true)}
-            bgColor={colors.light_red}
+            $bgcolor={colors.light_red}
           >
             <FaTrash size={12} />
           </IconWrapperButton>

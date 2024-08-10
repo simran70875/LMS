@@ -15,7 +15,7 @@ exports.authenticateToken = (req, res, next) => {
 
   //NOTE -- Verify the token using JWT library
   jwt.verify(token, secretKey, (err, user) => {
-    if (err) return res.send.Status(403);
+    if (err) return res.send({ success: false, message: "Not Authorized!" });
     req.user = user;
     console.log(req.user);
     next();

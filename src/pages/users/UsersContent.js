@@ -97,7 +97,7 @@ const UsersContent = () => {
               padding: 0,
             }}
             onClick={() => editStudent(params.data)}
-            bgColor={colors.light_green}
+            $bgcolor={colors.light_green}
           >
             <FaEdit size={12} />
           </IconWrapperButton>
@@ -109,7 +109,7 @@ const UsersContent = () => {
               padding: 0,
             }}
             onClick={() => deleteStudent(params.data)}
-            bgColor={colors.light_red}
+            $bgcolor={colors.light_red}
           >
             <FaTrash size={12} />
           </IconWrapperButton>
@@ -121,7 +121,7 @@ const UsersContent = () => {
               padding: 0,
             }}
             onClick={() => toggleStatus(params.data)}
-            bgColor={
+            $bgcolor={
               params.data.action === "active"
                 ? colors.light_red
                 : colors.light_green

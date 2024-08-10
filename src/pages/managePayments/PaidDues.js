@@ -54,7 +54,7 @@ const PaidDues = () => {
             padding: 0,
           }}
           onClick={() => openModal()}
-          bgColor={colors.light_green}
+          $bgcolor={colors.light_green}
         >
           <MdCheckCircle size={18} />
         </IconWrapperButton>

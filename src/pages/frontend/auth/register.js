@@ -18,8 +18,12 @@ import {
 } from "../../../styles/header.style";
 import { SmallButton } from "../../../styles/Profile.Styled";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import path from "../../../config/paths";
+import { postsWithoutToken } from "../../../services/post";
+import OtpInput from "react-otp-input";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import { auth } from "./firebase";
 
 const SliderContainer = styled.section`
   background-color: ${colors.secondary};
@@ -34,31 +38,82 @@ const Register = () => {
   const [formState, setFormState] = useState({
     role: "student",
     username: "",
-    phone: null,
+    phone: "",
     email: "",
     password: "",
     confirmPassword: "",
     image: "",
     address: "",
     course: "",
-    courseYears: null,
+    courseYears: 0,
   });
+  const [msz, setMsz] = useState("");
+  const [otpView, setOtpView] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [final, setFinal] = useState(null);
 
   const onChangeValue = (e) => {
     const { name, value } = e.target;
     setFormState({ ...formState, [name]: value });
   };
 
-  function register() {
-    axios
-      .post(path.register, formState)
-      .then((response) => {
-        console.log("Response:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+  const sendOtp = async (e) => {
+    e.preventDefault();
+    const phoneNumber = `+${formState.phone}`;
+    const phoneRegex = /^\+\d{10,15}$/;
+  
+    if (!phoneRegex.test(phoneNumber)) {
+      setMsz("Please enter a valid phone number.");
+      return;
+    }
+  
+    try {
+      // Make sure the container ID is correct and the element exists
+      const recaptchaContainer = document.getElementById("recaptcha-container");
+      if (!recaptchaContainer) {
+        throw new Error("reCAPTCHA container not found");
+      }
+  
+      // Initialize RecaptchaVerifier
+      const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        },
+        'expired-callback': () => {
+          // Handle reCAPTCHA expiration
+          console.warn("reCAPTCHA expired, please try again.");
+        }
       });
-  }
+  
+      // Send OTP
+      const result = await auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
+      setFinal(result);
+      setOtpView(true);
+      setMsz("OTP sent to your phone number.");
+    } catch (err) {
+      setMsz("Failed to send OTP. Please try again.");
+      console.error("sendOtp error:", err);
+    }
+  };
+  
+
+  const register = async (e) => {
+    e.preventDefault();
+    if (!otp || !final) {
+      setMsz("Please enter the OTP.");
+      return;
+    }
+
+    try {
+      await final.confirm(otp);
+      const response = await postsWithoutToken(path.register, formState);
+      setMsz(response.data.message);
+    } catch (err) {
+      setMsz("Invalid OTP or registration failed. Please try again.");
+      console.error("Register error:", err);
+    }
+  };
 
   return (
     <SliderContainer>
@@ -105,123 +160,173 @@ const Register = () => {
               borderRadius: 10,
             }}
           >
-            <form className="row">
-              <HeadingLarge style={{ fontSize: "1em" }}>Register</HeadingLarge>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-solid fa-user " />
-                <FormInput
-                  style={{ width: "100%" }}
-                  type="text"
-                  name="username"
-                  placeholder="Student Name"
-                  value={formState.username}
-                  onChange={onChangeValue}
+            <div id="recaptcha-container"></div>
+            {otpView ? (
+              <>
+                <HeadingLarge style={{ fontSize: "1em", marginBottom: 5 }}>
+                  Verify OTP
+                </HeadingLarge>
+                <Tagline
+                  style={{
+                    marginBottom: 10,
+                    width: "100%",
+                    marginTop: 5,
+                  }}
+                >
+                  Please enter the OTP sent to your phone number to verify your identity.
+                </Tagline>
+                <Highlight>{msz}</Highlight>
+                <OtpInput
+                  inputStyle={{
+                    width: 50,
+                    height: 50,
+                    fontSize: 20,
+                    marginRight: 20,
+                    backgroundColor: "#fff0",
+                    borderColor: "#bbbbbd",
+                    borderWidth: 1,
+                    borderRadius: 5,
+                  }}
+                  value={otp}
+                  onChange={setOtp}
+                  numInputs={6}
+                  renderInput={(props) => <input {...props} />}
                 />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-phone" />
-                <FormInput
-                  type="text"
-                  name="phone"
-                  style={{ width: "100%" }}
-                  placeholder="Mobile No."
-                  value={formState.phone}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-envelope-open" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="email"
-                  placeholder="Email Id"
-                  value={formState.email}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-map" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="address"
-                  placeholder="Address"
-                  value={formState.address}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-school" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="course"
-                  placeholder="Course"
-                  value={formState.course}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-school" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="courseYear"
-                  placeholder="Course Year"
-                  value={formState.courseYears}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-lock" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="password"
-                  placeholder="Password"
-                  value={formState.password}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SearchBar className="col-md-6">
-                <InputIcon className="fas fa-fa-solid fa-lock" />
-                <FormInput
-                  type="text"
-                  style={{ width: "100%" }}
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  value={formState.confirmPassword}
-                  onChange={onChangeValue}
-                />
-              </SearchBar>
-              <SuccessButton
-                onClick={() => register()}
-                className="mt-4"
-                style={{ width: "100%", borderRadius: 0 }}
-              >
-                Register
-              </SuccessButton>
-            </form>
-            <Tagline
-              style={{
-                marginBottom: 0,
-                width: "100%",
-                textAlign: "center",
-                marginTop: 5,
-              }}
-            >
-              Do you have an account.{" "}
-              <Highlight
-                style={{
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                }}
-                onClick={() => navigate("/login")}
-              >
-                Login
-              </Highlight>
-            </Tagline>
+                <SuccessButton
+                  onClick={register}
+                  className="mt-4"
+                  style={{ width: "30%", borderRadius: 0 }}
+                >
+                  Verify
+                </SuccessButton>
+              </>
+            ) : (
+              <form className="row" onSubmit={sendOtp}>
+                <HeadingLarge style={{ fontSize: "1em" }}>
+                  Register
+                </HeadingLarge>
+                <Highlight>{msz}</Highlight>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-user " />
+                  <FormInput
+                    required
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="username"
+                    placeholder="Student Name"
+                    value={formState.username}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-phone" />
+                  <FormInput
+                    required
+                    type="text"
+                    name="phone"
+                    style={{ width: "100%" }}
+                    placeholder="Mobile No."
+                    value={formState.phone}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-envelope-open" />
+                  <FormInput
+                    required
+                    type="email"
+                    style={{ width: "100%" }}
+                    name="email"
+                    placeholder="Email Id"
+                    value={formState.email}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-map" />
+                  <FormInput
+                    type="text"
+                    style={{ width: "100%" }}
+                    name="address"
+                    placeholder="Address"
+                    value={formState.address}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-school" />
+                  <FormInput
+                    type="text"
+                    style={{ width: "100%" }}
+                    name="course"
+                    placeholder="Course"
+                    value={formState.course}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-school" />
+                  <FormInput
+                    type="number"
+                    name="courseYears"
+                    style={{ width: "100%" }}
+                    placeholder="Course Year"
+                    value={formState.courseYears}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-lock" />
+                  <FormInput
+                    required
+                    type="password"
+                    style={{ width: "100%" }}
+                    name="password"
+                    placeholder="Password"
+                    value={formState.password}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SearchBar className="col-md-6">
+                  <InputIcon className="fas fa-solid fa-lock" />
+                  <FormInput
+                    required
+                    type="password"
+                    style={{ width: "100%" }}
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    value={formState.confirmPassword}
+                    onChange={onChangeValue}
+                  />
+                </SearchBar>
+                <SuccessButton
+                  type="submit"
+                  className="mt-4"
+                  style={{ width: "100%", borderRadius: 0 }}
+                >
+                  Register
+                </SuccessButton>
+                <Tagline
+                  style={{
+                    marginBottom: 0,
+                    width: "100%",
+                    textAlign: "center",
+                    marginTop: 5,
+                  }}
+                >
+                  Do you have an account?{" "}
+                  <Highlight
+                    style={{
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                    onClick={() => navigate("/login")}
+                  >
+                    Login
+                  </Highlight>
+                </Tagline>
+              </form>
+            )}
           </div>
         </Hero>
       </div>

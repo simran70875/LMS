@@ -12,7 +12,7 @@ exports.validateRegisterUser = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        message: "Validation failed",
+        message: "Validation failed! Some fields are required",
         errors: errors.array(),
       });
     }
@@ -27,7 +27,7 @@ exports.validateLoginUser = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        message: "Validation failed",
+        message: "Validation failed! Username and password are required",
         errors: errors.array(),
       });
     }

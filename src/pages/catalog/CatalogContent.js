@@ -87,7 +87,7 @@ const CatalogContent = () => {
               padding: 0,
             }}
             onClick={() => editBook(params.data)}
-            bgColor={colors.light_green}
+            $bgcolor={colors.light_green}
           >
             <FaEdit size={12} />
           </IconWrapperButton>
@@ -99,14 +99,14 @@ const CatalogContent = () => {
               padding: 0,
             }}
             onClick={() => deleteBook(params.data)}
-            bgColor={colors.light_red}
+            $bgcolor={colors.light_red}
           >
             <FaTrash size={12} />
           </IconWrapperButton>
           <IconWrapperButton
             style={{ width: 30, height: 30, borderRadius: 6, padding: 0 }}
             onClick={() => toggleStatus(params.data)}
-            bgColor={colors.light_purple}
+            $bgcolor={colors.light_purple}
           >
             {params.data.enabled ? (
               <FaToggleOn size={12} />

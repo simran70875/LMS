@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   Hero,
@@ -19,6 +19,10 @@ import {
 } from "../../../styles/header.style";
 import { SmallButton } from "../../../styles/Profile.Styled";
 import { useNavigate } from "react-router-dom";
+import path from "../../../config/paths";
+import { postsWithoutToken } from "../../../services/post";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../../store/reducers/authReducer"; 
 
 const SliderContainer = styled.section`
   background-color: ${colors.secondary};
@@ -29,6 +33,42 @@ const SliderContainer = styled.section`
 
 const Login = () => {
   const navigate = useNavigate();
+  const [formState, setFormState] = useState({
+    username: "",
+    password: "",
+  });
+  const [msz, setMsz] = useState("");
+  const dispatch = useDispatch();
+
+  const onChangeValue = (e) => {
+    const { name, value } = e.target;
+    setFormState({ ...formState, [name]: value });
+  };
+
+  const login = async (e) => {
+    console.log("formState:", formState);
+    try {
+      const response = await postsWithoutToken(path.login, formState);
+      dispatch(
+        loginSuccess({
+          token: response.data.token,
+          role: response.data.role,
+          userid: response.data.userid,
+        })
+      );
+      console.log("response", response.data);
+      setMsz(response.data.message);
+      navigate("/dashboard");
+    } catch (error) {
+      console.log("login error", error);
+      if (error.response.data.errors) {
+        setMsz(error.response.data.errors.map((item) => item.msg).join(", "));
+      } else {
+        setMsz(error.response.data.message);
+      }
+    }
+  };
+
   return (
     <SliderContainer>
       <HeaderContainer>
@@ -74,14 +114,18 @@ const Login = () => {
               borderRadius: 10,
             }}
           >
-            <form style={{ margin: "auto", display: "block", width: "50%" }}>
+            <div style={{ margin: "auto", display: "block", width: "50%" }}>
               <HeadingLarge style={{ fontSize: "1em" }}>Login</HeadingLarge>
+              <Highlight>{msz}</Highlight>
               <SearchBar>
                 <InputIcon className="fas fa-solid fa-user " />
                 <FormInput
                   style={{ width: "100%" }}
                   type="text"
                   placeholder="Username or Email Address"
+                  name="username"
+                  value={formState.username}
+                  onChange={onChangeValue}
                 />
               </SearchBar>
               <SearchBar>
@@ -90,16 +134,19 @@ const Login = () => {
                   type="text"
                   style={{ width: "100%" }}
                   placeholder="Password"
+                  value={formState.password}
+                  name="password"
+                  onChange={onChangeValue}
                 />
               </SearchBar>
               <SuccessButton
-              onClick={() => navigate("/dashboard")}
+                onClick={() => login()}
                 className="mt-4"
                 style={{ width: "100%", borderRadius: 0 }}
               >
                 Login
               </SuccessButton>
-            </form>
+            </div>
             <Tagline
               style={{
                 marginBottom: 0,
