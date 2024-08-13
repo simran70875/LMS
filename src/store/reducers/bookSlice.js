@@ -1,10 +1,11 @@
-import { createSlice, asyncThunkCreator } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getWithoutToken } from "../../services/get";
 import path from "../../config/paths";
 
-const fetchBooks = asyncThunkCreator("books/fetchBooks", async () => {
+export const fetchBooks = createAsyncThunk("books/fetchBooks", async () => {
   const response = await getWithoutToken(path.getBooks);
-  return response.data;
+  console.log("response ==> ", response.data);
+  return response.data.data;
 });
 
 const bookSlice = createSlice({

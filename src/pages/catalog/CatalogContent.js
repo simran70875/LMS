@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, SectionTitle } from "../../styles/SectionTitle.Styled";
 import { FaEdit, FaTrash, FaToggleOn, FaToggleOff } from "react-icons/fa";
 import { AgGridReact } from "ag-grid-react";
@@ -10,53 +10,39 @@ import { IconWrapperButton } from "../../styles/List.styled";
 import colors from "../../styles/colors";
 import { Modal } from "react-bootstrap";
 import AddBook from "./AddNewBook";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBooks } from "../../store/reducers/bookSlice";
 
 const CatalogContent = () => {
   const [addNewBookModal, setAddNewBookModal] = useState(false);
-  // Sample catalog data
-  const catalogData = [
-    {
-      isbn: "978-0-7432-7356-5",
-      imageUrl:
-        "https://marketplace.canva.com/EAFMf17QgBs/1/0/1003w/canva-green-and-yellow-modern-book-cover-business-Ah-do4Y91lk.jpg",
-      title: "The Great Gatsby",
-
-      description:
-        "The Great Gatsby is a novel by American writer F. Scott Fitzgerald. It tells the story of a man named Jay Gatsby and his pursuit of the American Dream.",
-      category: "Fiction",
-      publicationYear: 1925,
-
-      availableCopies: 5,
-      borrowed: 4,
-    },
-    {
-      isbn: "978-0-06-112008-4",
-      imageUrl: "https://edit.org/images/cat/book-covers-big-2019101610.jpg",
-      title: "To Kill a Mockingbird",
-      description:
-        "To Kill a Mockingbird is a novel by Harper Lee. It explores themes of racial injustice and the loss of innocence in the American South.",
-
-      category: "Literary Fiction",
-      publicationYear: 1960,
-
-      availableCopies: 3,
-      borrowed: 2,
-    },
-    // Add more books with similar structure
-  ];
 
   const columnDefs = [
     { headerName: "ISBN", field: "isbn" },
     {
       headerName: "Cover Image",
-      field: "imageUrl",
+      field: "coverImage",
       sortable: true,
+      autoHeight: true,
       cellRenderer: (params) => {
-        return <img src={params.value} alt="img" style={{ width: 70 }} />;
+        return <img src={params.value} alt="img" style={{ width: 70 ,height: 80 }} />;
       },
     },
-    { headerName: "Title", field: "title", sortable: true },
-
+    { headerName: "Title", field: "title", sortable: true, wrapText: true,
+      autoHeight: true, 
+      width:400,
+      cellRenderer: (params) => (
+        <div>
+          <p>{params.data.title}</p>
+          <p>{params.data.description}</p>
+        </div>
+      ),
+    },
+    {
+      headerName: "authorName",
+      field: "authorName",
+      wrapText: true,
+      autoHeight: true,
+    },
     {
       headerName: "Description",
       field: "description",
@@ -76,7 +62,7 @@ const CatalogContent = () => {
             display: "flex",
             gap: 5,
             alignItems: "center",
-            marginTop: 5,
+            // marginTop: 5,
           }}
         >
           <IconWrapperButton
@@ -119,6 +105,24 @@ const CatalogContent = () => {
     },
   ];
 
+  const dispatch = useDispatch();
+  const catalogData = useSelector((state) => state.getBooks.books);
+  console.log(catalogData);
+  const status = useSelector((state) => state.getBooks.status);
+  const error = useSelector((state) => state.getBooks.error);
+
+  useEffect(() => {
+    dispatch(fetchBooks());
+  }, [dispatch]);
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "failed") {
+    return <div>Error: {error}</div>;
+  }
+
   const editBook = (book) => {
     // Implement edit functionality
     console.log("Edit book:", book);
@@ -147,7 +151,11 @@ const CatalogContent = () => {
         <SectionTitle>Catalog</SectionTitle>
         <div style={{ display: "flex", alignItems: "center" }}>
           <Button
-            style={{ backgroundColor: colors.primary2, marginRight: 10,color:'#000' }}
+            style={{
+              backgroundColor: colors.primary2,
+              marginRight: 10,
+              color: "#000",
+            }}
             onClick={() => setAddNewBookModal(true)}
           >
             <FaPlus />

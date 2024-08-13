@@ -18,22 +18,21 @@ export const Heading = styled.h2`
 export const Book = styled.div`
   position: relative;
   text-align: center;
-  cursor:pointer
+  cursor: pointer;
 `;
 
 export const BookIndex = styled.div`
   position: absolute;
-  top: -4px;
-  right: 15px;
+  top: -20px;
+  right: 0px;
   font-size: 2em;
   color: rgb(69 163 87);
   z-index: 1;
   font-weight: 900;
-  
 `;
 
 export const BookImage = styled.img`
-  width: auto;
+  width: 200px;
   margin: auto;
   border-radius: 10px;
   border: 2px solid;
@@ -47,5 +46,4 @@ export const BookTitle = styled.div`
   overflow: hidden;
   overflow-wrap: break-word;
   text-overflow: ellipsis;
-
 `;

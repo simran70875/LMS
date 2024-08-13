@@ -5,7 +5,7 @@ import bookReducer  from "../reducers/bookSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  books: bookReducer ,
+  getBooks: bookReducer ,
 });
 
 export default rootReducer;
